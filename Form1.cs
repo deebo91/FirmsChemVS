@@ -76,12 +76,19 @@ namespace FirmsChemVS
 
         private void initiateseconddatagrid() // Creates the data for the isotopes and fragments 
         {
+			int largestElement = 0;
+			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var sortedElements = from element in enteredElements orderby element.Value descending select element;
+			Console.WriteLine (sortedElements);
+			largestElement = sortedElements.First().Value;
+			dataGridView2.ColumnCount += largestElement;
+
             for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
             {
                 int Rowdaughterion;
                 Int32.TryParse((String)dataGridView1[2, index].Value, out Rowdaughterion);
                 dataGridView2.Rows.Add(dataGridView1[1, index].Value);
-                dataGridView2.Rows.Add(Rowdaughterion - 1);
+               
             };
         }
 
@@ -103,16 +110,7 @@ namespace FirmsChemVS
         }
         private void populatemolecularheaders() // creates headers based on elements presenting the molecular formula
         {
-            var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            foreach (KeyValuePair<string, int> entry in enteredElements) //
-            {
-                string[] columnHeaders = elementHash[entry.Key];
-                for (int index = 0; index < columnHeaders.Length; index++)
-                {
-                    dataGridView2.Columns.Add(columnHeaders[index], columnHeaders[index]);
-                }
-            }
+			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             constructMolecularFormula(enteredElements);
         }
 
