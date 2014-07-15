@@ -131,6 +131,13 @@ namespace FirmsChemVS
             elementValues["Si"] = Ssilicon;
 
         }
+
+		private void addRows()
+		{
+
+
+			dataGridView1.Rows.Add (IsotopewithavailableMSdata);
+		}
         private void Okay_Click(object sender, EventArgs e) //
         {
             IsCompoundName = tbCompound.Text;
@@ -161,9 +168,11 @@ namespace FirmsChemVS
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
+		private void button1_Click(object sender, EventArgs e)
+		{
+			Int32.TryParse(isomsdata.Text, out IsotopewithavailableMSdata);
+			addRows();
+	    }
 
-        }
     }
 }
