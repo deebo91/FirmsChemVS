@@ -73,6 +73,7 @@
             this.Baseparentionmass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Daughterionmass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Abundance = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -376,7 +377,7 @@
             // 
             this.isomsdata.Location = new System.Drawing.Point(666, 117);
             this.isomsdata.Name = "isomsdata";
-            this.isomsdata.Size = new System.Drawing.Size(88, 20);
+            this.isomsdata.Size = new System.Drawing.Size(40, 20);
             this.isomsdata.TabIndex = 38;
             // 
             // dataGridView1
@@ -436,11 +437,21 @@
             this.Abundance.HeaderText = "Abundance";
             this.Abundance.Name = "Abundance";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(712, 115);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(42, 23);
+            this.button1.TabIndex = 41;
+            this.button1.Text = ">>";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1110, 502);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.isomsdata);
@@ -536,6 +547,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Baseparentionmass;
         private System.Windows.Forms.DataGridViewTextBoxColumn Daughterionmass;
         private System.Windows.Forms.DataGridViewTextBoxColumn Abundance;
+        private System.Windows.Forms.Button button1;
     }
 }
 
