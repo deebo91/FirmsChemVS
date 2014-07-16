@@ -1,15 +1,15 @@
 ﻿// Importing system library
-using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System; 
+using System.Collections.Generic;  
+using System.Collections; 
+using System.Text.RegularExpressions; 
+using System.ComponentModel; 
+using System.Data; 
+using System.Drawing; 
+using System.Linq; 
+using System.Text; 
+using System.Threading.Tasks;  
+using System.Windows.Forms; 
 
 namespace FirmsChemVS
 {
@@ -38,7 +38,7 @@ namespace FirmsChemVS
         // the number of atoms
         Dictionary<String, int> elementValues; // variable that can hold a key and a value for the element and its isotopes
 
-        public Form1()
+        public Form1() 
         {
             InitializeComponent();
             elementValues = new Dictionary<String, int>(){ 
@@ -76,35 +76,20 @@ namespace FirmsChemVS
 
         private void initiateseconddatagrid() // Creates the data for the isotopes and fragments 
         {
-            int largestElement = 0;
-            var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            var sortedElements = from element in enteredElements orderby element.Value descending select element;
-            Console.WriteLine(sortedElements);
-            largestElement = sortedElements.First().Value;
-            dataGridView2.ColumnCount += largestElement;
+			int largestElement = 0;
+			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var sortedElements = from element in enteredElements orderby element.Value descending select element;
+			Console.WriteLine (sortedElements);
+			largestElement = sortedElements.First().Value;
+			dataGridView2.ColumnCount += largestElement;
 
-            int columnOffset = 3;
-            int Rowdaughterion;
-            for (int firstRowIndex = 0; firstRowIndex < dataGridView1.Rows.Count; firstRowIndex++)
+            for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
             {
+                int Rowdaughterion;
+                Int32.TryParse((String)dataGridView1[2, index].Value, out Rowdaughterion);
+                dataGridView2.Rows.Add(dataGridView1[1, index].Value);
                
-                Int32.TryParse((String)dataGridView1[2, firstRowIndex].Value, out Rowdaughterion);
-                dataGridView2.Rows.Add(dataGridView1[1, firstRowIndex].Value);
-                foreach (KeyValuePair<string, int> entry in sortedElements)
-                {
-                    for (int column = columnOffset; column < entry.Value + columnOffset; column++)
-                    {
-                        int lastRow = dataGridView2.Rows.Count - 1; //get the last row in our second datagrid
-                        dataGridView2[column, lastRow].Value = entry.Key + "#" + (column - (columnOffset - 1));
-
-                    }
-                    dataGridView2.Rows.Add(2);
-                }
-            }
-
-
-
-
+            };
         }
 
         private void constructMolecularFormula(Dictionary<string, int> elements) // creates the molecular formula to be displayed
@@ -125,7 +110,7 @@ namespace FirmsChemVS
         }
         private void populatemolecularheaders() // creates headers based on elements presenting the molecular formula
         {
-            var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             constructMolecularFormula(enteredElements);
         }
 
@@ -145,27 +130,14 @@ namespace FirmsChemVS
 
         }
 
-        private void addRows()
-        {
-            dataGridView1.Rows.Add(IsotopewithavailableMSdata);
-        }
+		private void addRows()
+		{
 
-        private void clearColumnsForGrid2()
-        {
-            for (int columnIndx = dataGridView2.Columns.Count - 1; columnIndx >= 3; columnIndx--)
-            {
-                dataGridView2.Columns.RemoveAt(columnIndx);
-            }
-        }
 
+			dataGridView1.Rows.Add (IsotopewithavailableMSdata);
+		}
         private void Okay_Click(object sender, EventArgs e) //
         {
-            if (dataGridView2.Columns.Count > 3 && dataGridView2.Rows.Count > 0)
-            {
-                dataGridView2.Rows.Clear();
-                clearColumnsForGrid2();
-            }
-            
             IsCompoundName = tbCompound.Text;
             MolecularFormula = molfur.Text;
             // TryParse converts string to integer to represent the type of what you are looking for
@@ -194,16 +166,11 @@ namespace FirmsChemVS
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Int32.TryParse(isomsdata.Text, out IsotopewithavailableMSdata);
-            addRows();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            dataGridView1.Rows.Clear();
-        }
+		private void button1_Click(object sender, EventArgs e)
+		{
+			Int32.TryParse(isomsdata.Text, out IsotopewithavailableMSdata);
+			addRows();
+	    }
 
     }
 }
