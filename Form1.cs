@@ -1,15 +1,16 @@
-﻿// Importing system library
-using System; 
-using System.Collections.Generic;  
-using System.Collections; 
-using System.Text.RegularExpressions; 
-using System.ComponentModel; 
-using System.Data; 
-using System.Drawing; 
-using System.Linq; 
-using System.Text; 
-using System.Threading.Tasks;  
-using System.Windows.Forms; 
+﻿﻿// Importing system library
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FirmsChemVS
 {
@@ -33,15 +34,15 @@ namespace FirmsChemVS
         int Ssilicon;
         int FragmentMS;
         int IsotopewithavailableMSdata;
-        double CompoundBaseMass;  // the mass of a fragment including decimal
+        double CompoundBaseMass;  // the mass of a compound isotope including decimal
         Dictionary<String, String[]> elementHash = new Dictionary<string, string[]>(); // Variable that can hold a key and a value for the element and
         // the number of atoms
-        Dictionary<String, int> elementValues; // variable that can hold a key and a value for the element and its isotopes
+        OrderedDictionary elementValues; // variable that can hold a key and a value for the element and its isotopes
 
-        public Form1() 
+        public Form1()
         {
             InitializeComponent();
-            elementValues = new Dictionary<String, int>(){ 
+            elementValues = new OrderedDictionary(){ 
                 // Initializing the dictionary with the element values
     {"C",0},
     {"H",0},
@@ -55,7 +56,7 @@ namespace FirmsChemVS
     {"P",0},
     {"Si",0}
 
-   };
+   };     // This part is not useful for now because there are changes made from previous code but I still wanted to keep it
             elementHash["C"] = new string[2] { "12C", "13C" };
             elementHash["H"] = new string[2] { "1H", "2H(D)" };
             elementHash["N"] = new string[2] { "14N", "15N" };
@@ -76,42 +77,42 @@ namespace FirmsChemVS
 
         private void initiateseconddatagrid() // Creates the data for the isotopes and fragments 
         {
-			int largestElement = 0;
-			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-			var sortedElements = from element in enteredElements orderby element.Value descending select element;
-			Console.WriteLine (sortedElements);
-			largestElement = sortedElements.First().Value;
-			dataGridView2.ColumnCount += largestElement;
-
-            for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
+            int lastColumn = dataGridView2.ColumnCount;
+            foreach (DictionaryEntry entry in elementValues)
             {
-                int Rowdaughterion;
-                Int32.TryParse((String)dataGridView1[2, index].Value, out Rowdaughterion);
-                dataGridView2.Rows.Add(dataGridView1[1, index].Value);
-               
-            };
+                if ((int)entry.Value > 0)
+                {
+                    for (int index = 1; index <= (int)entry.Value; index++)
+                    {
+                        dataGridView2.Columns.Add((string)entry.Key + index, (string)entry.Key + index);
+                    }
+                }
+            }
+
         }
 
-        private void constructMolecularFormula(Dictionary<string, int> elements) // creates the molecular formula to be displayed
+        private void constructMolecularFormula(OrderedDictionary elements) // creates the molecular formula to be displayed
         {
             String formula = "";
-            foreach (KeyValuePair<string, int> entry in elements)
+            foreach (DictionaryEntry entry in elements)
             {
-                if (entry.Value == 1)
+                if ((int)entry.Value > 0)
                 {
-                    formula += entry.Key;
-                }
-                else
-                {
-                    formula += entry.Key + entry.Value;
+                    if ((int)entry.Value == 1)
+                    {
+                        formula += (string)entry.Key;
+                    }
+                    else
+                    {
+                        formula += (string)entry.Key + (int)entry.Value;
+                    }
                 }
             }
             molfur.Text = formula;
         }
         private void populatemolecularheaders() // creates headers based on elements presenting the molecular formula
         {
-			var enteredElements = elementValues.Where(kvp => kvp.Value >= 1).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            constructMolecularFormula(enteredElements);
+            constructMolecularFormula(elementValues);
         }
 
         private void populateElementValuesDic() // reads the number of elements entered by user and populate into the dictionary
@@ -130,14 +131,27 @@ namespace FirmsChemVS
 
         }
 
-		private void addRows()
-		{
-
-
-			dataGridView1.Rows.Add (IsotopewithavailableMSdata);
-		}
-        private void Okay_Click(object sender, EventArgs e) //
+        private void addRows()
         {
+            dataGridView1.Rows.Add(IsotopewithavailableMSdata);
+        }
+
+        private void clearColumnsForGrid2()
+        {
+            for (int columnIndx = dataGridView2.Columns.Count - 1; columnIndx >= 3; columnIndx--)
+            {
+                dataGridView2.Columns.RemoveAt(columnIndx);
+            }
+        }
+
+        private void Okay_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.Columns.Count > 3)
+            {
+                
+                clearColumnsForGrid2();
+            }
+
             IsCompoundName = tbCompound.Text;
             MolecularFormula = molfur.Text;
             // TryParse converts string to integer to represent the type of what you are looking for
@@ -166,11 +180,21 @@ namespace FirmsChemVS
 
         }
 
-		private void button1_Click(object sender, EventArgs e)
-		{
-			Int32.TryParse(isomsdata.Text, out IsotopewithavailableMSdata);
-			addRows();
-	    }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Int32.TryParse(isomsdata.Text, out IsotopewithavailableMSdata);
+            addRows();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+        }
 
     }
 }
