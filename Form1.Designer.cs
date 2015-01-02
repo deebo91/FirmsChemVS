@@ -382,6 +382,7 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Isotope,
@@ -445,8 +446,7 @@
             this.button1.TabIndex = 41;
             this.button1.Text = ">>";
             this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
-
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 

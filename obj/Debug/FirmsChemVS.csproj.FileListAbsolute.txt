@@ -10,3 +10,12 @@ c:\users\administrator\documents\visual studio 2013\Projects\FirmsChemVS\obj\Deb
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\FirmsChemVS\FirmsChemVS\bin\Debug\FirmsChemVS.exe.config
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\FirmsChemVS\FirmsChemVS\obj\Debug\FirmsChemVS.exe
 C:\Users\Administrator\Documents\Visual Studio 2013\Projects\FirmsChemVS\FirmsChemVS\obj\Debug\FirmsChemVS.pdb
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\bin\Debug\FirmsChemVS.exe.config
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.exe
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.pdb
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.csprojResolveAssemblyReference.cache
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.Form1.resources
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.Properties.Resources.resources
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\obj\Debug\FirmsChemVS.csproj.GenerateResource.Cache
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\bin\Debug\FirmsChemVS.exe
+C:\Users\Deebo\Documents\GitHub\FirmsChemVS\bin\Debug\FirmsChemVS.pdb
