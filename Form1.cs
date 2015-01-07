@@ -84,7 +84,10 @@ namespace FirmsChemVS
                 {
                     for (int index = 1; index <= (int)entry.Value; index++)
                     {
-                        dataGridView2.Columns.Add((string)entry.Key + index, (string)entry.Key + index);
+                        DataGridViewCheckBoxColumn columnToAdd = new DataGridViewCheckBoxColumn();
+                        columnToAdd.HeaderText = (string)entry.Key + index;
+                        columnToAdd.Name = (string)entry.Key + index;
+                       int columnId = dataGridView2.Columns.Add(columnToAdd);
                     }
                 }
             }
