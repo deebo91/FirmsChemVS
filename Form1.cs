@@ -1,5 +1,6 @@
 ﻿﻿// Importing system library
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 using System.Collections.Specialized;
@@ -11,6 +12,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FirmsChemVS.Repositories;
+using DoddleReport;
+using DoddleReport.OpenXml;
+
+
 
 namespace FirmsChemVS
 {
@@ -38,10 +44,12 @@ namespace FirmsChemVS
         Dictionary<String, String[]> elementHash = new Dictionary<string, string[]>(); // Variable that can hold a key and a value for the element and
         // the number of atoms
         OrderedDictionary elementValues; // variable that can hold a key and a value for the element and its isotopes
+        DataReporter reporter;
 
         public Form1()
         {
             InitializeComponent();
+            reporter = new DataReporter();
             elementValues = new OrderedDictionary(){ 
                 // Initializing the dictionary with the element values
     {"C",0},
@@ -176,12 +184,9 @@ namespace FirmsChemVS
             populateElementValuesDic();
             initiateseconddatagrid();
             populatemolecularheaders();
+            
         }
 
-        private void framsbms_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -197,6 +202,41 @@ namespace FirmsChemVS
         private void button2_Click_1(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
+        }
+
+        private void button2_Click_2(object sender, EventArgs e)
+        {
+            reporter = new DataReporter(dataGridView2);
+            
+
+            if (reporter.exportDataSetToExcelFile())
+            {
+                MessageBox.Show("File has been saved under My Documents");
+            }
+            else
+            {
+                MessageBox.Show("Unable to save file");
+            }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex > 3 && e.RowIndex != -1)
+            {
+                toggleSelection(dataGridView2.CurrentCell);
+            }
+        }
+
+        private void toggleSelection(DataGridViewCell e)
+        {
+            if (e.Value == null || (string)e.Value == "")
+            {
+                e.Value = "X";
+            }
+            else
+            {
+                e.Value = "";
+            }
         }
 
     }
