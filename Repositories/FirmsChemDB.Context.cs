@@ -27,5 +27,6 @@ namespace FirmsChemVS.Repositories
     
         public virtual DbSet<Compound> Compounds { get; set; }
         public virtual DbSet<Isotope> Isotopes { get; set; }
+        public virtual DbSet<Table> Tables { get; set; }
     }
 }

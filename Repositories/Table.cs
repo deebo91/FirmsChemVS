@@ -12,13 +12,12 @@ namespace FirmsChemVS.Repositories
     using System;
     using System.Collections.Generic;
     
-    public partial class Isotope
+    public partial class Table
     {
         public int isotopeId { get; set; }
         public string name { get; set; }
         public Nullable<int> isotopeNumber { get; set; }
         public Nullable<double> atomMass { get; set; }
         public Nullable<double> abundance { get; set; }
-        public string atomSymbol { get; set; }
     }
 }

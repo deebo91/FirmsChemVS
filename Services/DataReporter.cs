@@ -9,7 +9,7 @@ using System.IO;
 using DoddleReport;
 using DoddleReport.OpenXml;
 
-namespace FirmsChemVS.Repositories
+namespace FirmsChemVS.Services
 {
     class DataReporter
     {
@@ -18,12 +18,12 @@ namespace FirmsChemVS.Repositories
         public DataTable DataForGrid2
         {
             get { return dataForGrid2; }
+            
         }
 
         public DataReporter(DataGridView gridview)
         {
-            dataForGrid2 = new DataTable();
-            convertDatagridToDatatable(gridview);
+            dataForGrid2 = convertDatagridToDatatable(gridview);
         }
 
         public DataReporter()
@@ -36,7 +36,9 @@ namespace FirmsChemVS.Repositories
 
         }
 
-        private void convertDatagridToDatatable(DataGridView dgv)
+
+
+        public static DataTable convertDatagridToDatatable(DataGridView dgv)
         {
             var dt = new DataTable();
             foreach (DataGridViewColumn column in dgv.Columns)
@@ -58,7 +60,7 @@ namespace FirmsChemVS.Repositories
                 }
                 dt.Rows.Add(cellValues);
             }
-            dataForGrid2 = dt;
+            return dt;
         }
 
         public bool exportDataSetToExcelFile(){
