@@ -82,6 +82,7 @@ namespace FirmsChemVS
             // TryParse converts string to integer to represent the type of what you are looking for
             molwei.Text = facade.CalculateMolecularWeight(elementGrid).ToString();
             molfur.Text = facade.CalculateMolecularFormula(elementGrid);
+            facade.CalculateIsotopeCombinations(elementGrid);
             LayoutCompoundTable();
         }
 

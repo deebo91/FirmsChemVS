@@ -61,6 +61,12 @@ namespace FirmsChemVS.Services
             dataReporter = new DataReporter(grid);
             return dataReporter.exportDataSetToExcelFile();
         }
+
+        public List<string> CalculateIsotopeCombinations(DataGridView grid)
+        {
+            DataTable dt = DataReporter.convertDatagridToDatatable(grid);
+            return calculations.possibleIsotopeCombinations(dt);
+        }
     
     
     
