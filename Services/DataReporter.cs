@@ -63,15 +63,15 @@ namespace FirmsChemVS.Services
             return dt;
         }
 
-        public bool exportDataSetToExcelFile(){
+        public static bool exportDataSetToExcelFile(DataTable gridToReport){
 
             Random generator = new Random();
             string path = System.IO.Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.MyDocuments), (String.Format("{0}.xlsx", generator.Next(500, 1000))));
-            if(dataForGrid2 != null)
+            if (gridToReport != null)
             {
                 FileStream reportOutput = new FileStream(path, FileMode.Create);
-                var report = new Report(DataForGrid2.ToReportSource());
+                var report = new Report(gridToReport.ToReportSource());
                 report.RenderHints.BooleansAsYesNo = true;
                 report.RenderHints.Orientation = ReportOrientation.Landscape;
                 var writer = new ExcelReportWriter();

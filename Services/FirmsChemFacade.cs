@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace FirmsChemVS.Services
         private DataWriter dataWriter;
         private DataInitializer initializer;
         private Calculations calculations;
+        private IsotopeService isotopeService;
         
 
         private FirmsChemFacade()
@@ -24,6 +26,7 @@ namespace FirmsChemVS.Services
             dataWriter = new DataWriter();
             initializer = new DataInitializer();
             calculations = new Calculations();
+            isotopeService = new IsotopeService();
         }
 
         public static FirmsChemFacade Instance 
@@ -59,7 +62,7 @@ namespace FirmsChemVS.Services
         public bool exportDataSetToExcelFile(DataGridView grid)
         {
             dataReporter = new DataReporter(grid);
-            return dataReporter.exportDataSetToExcelFile();
+            return DataReporter.exportDataSetToExcelFile(dataReporter.DataForGrid2);
         }
 
         public List<string> CalculateIsotopeCombinations(DataGridView grid)
@@ -67,6 +70,23 @@ namespace FirmsChemVS.Services
             DataTable dt = DataReporter.convertDatagridToDatatable(grid);
             return calculations.possibleIsotopeCombinations(dt);
         }
+
+        public void abundanceForRow(DataGridView grid)
+        {
+            ArrayList Abundances = DataGridViewHelper.ColumnToList(grid, "abundances");
+            long totalAbundance = 0;
+            foreach(String abundance in Abundances){
+               totalAbundance += Convert.ToInt64(abundance);
+            }
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                if(row.Cells["abundances"].Value != null){
+                    row.Cells["alphas"].Value = calculations.calculateAlphaForRow(totalAbundance, Convert.ToInt64(row.Cells["abundances"].Value));
+                }
+            }
+        }
+
+        
     
     
     

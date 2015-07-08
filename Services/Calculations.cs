@@ -6,12 +6,39 @@ using System.Text;
 using System.Data;
 using System.Threading.Tasks;
 using FirmsChemVS.Repositories;
+using FirmsChemVS.Services;
 
 namespace FirmsChemVS.Services
 {
-    class Calculations
+    public class Calculations
     {
-        
+        IsotopeService isotopeService = IsotopeService.Instance;
+        private static Calculations instance;
+        private Dictionary<string, int> currentRowElements = null;
+
+        public static Calculations Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Calculations();
+                }
+                return instance;
+            }
+        }
+
+        public Dictionary<string, int> CurrentRowElements
+        {
+            get
+            {
+                return this.currentRowElements;
+            }
+            set
+            {
+                this.currentRowElements = value;
+            }
+        }
         public double CalculateMolecularWeight(DataTable elements)
         {
             double molecularWeight = 0;
@@ -65,6 +92,7 @@ namespace FirmsChemVS.Services
         public List<string> possibleIsotopeCombinations(DataTable dt)
         {
             Dictionary<string, ArrayList> expandedCompound = new Dictionary<string, ArrayList>();
+            DataTable combinationTable = new DataTable();
 
 
             foreach (DataRow row in dt.Rows)
@@ -113,22 +141,40 @@ namespace FirmsChemVS.Services
                 listOfIsotopes = query.ToList();
                 
             }
+            combinationTable.Columns.AddRange(new DataColumn[]{new DataColumn("combination"), new DataColumn("mass")});
             foreach (Isotope element in listOfIsotopes)
             {
                 ArrayList elementGroup = expandedCompound[element.atomSymbol];
                 int temp = (int)elementGroup[elementGroup.Count - 1];
                 elementGroup.RemoveAt(elementGroup.Count - 1);
                 elementGroup.Add(element.isotopeNumber);
-                mSets.Add("M + " + (calculateIsotopicMass(expandedCompound) - molecularBaseMass));
+                int newIsotopeMass = calculateIsotopicMass(expandedCompound);
+                mSets.Add("M + " + (newIsotopeMass - molecularBaseMass));
+                combinationTable.Rows.Add(new object[] { outputIsotopeFormula(expandedCompound), newIsotopeMass + "+" });
                 elementGroup.RemoveAt(elementGroup.Count - 1);
                 elementGroup.Add(temp);
             }
-           
+
+            DataReporter.exportDataSetToExcelFile(combinationTable);
 
             
             
 
             return new List<string>();
+        }
+
+        string outputIsotopeFormula(Dictionary<string, ArrayList> expandedCompound)
+        {
+            string finalOutput = "";
+            foreach (var elementGroup in expandedCompound)
+            {
+                string currentCompound = elementGroup.Key;
+                foreach (int item in elementGroup.Value)
+                {
+                    finalOutput += item + currentCompound;
+                }
+            }
+            return finalOutput;
         }
 
         int calculateIsotopicMass(Dictionary<string, ArrayList> expandedCompound)
@@ -142,6 +188,85 @@ namespace FirmsChemVS.Services
                 }
             }
             return isotopicMass;
+        }
+
+        public double calculateAlphaForRow(long totalAbundances, long abundance)
+        {
+            return Math.Round(((double)abundance / (double)totalAbundances),5);
+        }
+
+        public void isotopeCombinations(int[] isotopes, int[] counts, int startIndex, int totalAmount,  List<Dictionary<int,int>> outputResults)
+        {
+            Dictionary<string, int> totalAllowableIsotopes = new Dictionary<string, int>();
+            if (startIndex >= isotopes.Length)
+            {
+                string[] isotopeChars = isotopeService.getAllIsotopesInList(isotopes);
+                for (int index = 0; index < isotopeChars.Length; index++)
+                {
+                    int retrievedValue;
+                    
+                    if (totalAllowableIsotopes.TryGetValue(isotopeChars[index], out retrievedValue))
+                    {
+                        totalAllowableIsotopes[isotopeChars[index]] = retrievedValue + counts[index];
+                    }
+                    else
+                    {
+                        totalAllowableIsotopes.Add(isotopeChars[index], counts[index]);
+                    }
+                }
+
+                var dict3 = CurrentRowElements.Where(entry => totalAllowableIsotopes[entry.Key] != entry.Value)
+                 .ToDictionary(entry => entry.Key, entry => entry.Value) as Dictionary<string, int>;
+
+                if (dict3.Count == 0)
+                {
+                    Dictionary<int, int> results = new Dictionary<int, int>();
+                    for (int index = 0; index < isotopes.Length; index++)
+                    {
+                        results.Add(isotopes[index], counts[index]);
+                        
+                        Console.Write(" ({0:N}:{1:N}) ", isotopes[index], counts[index]);
+                    }
+                    outputResults.Add(results);
+                }
+                Console.WriteLine(" ");
+                return;
+            }
+
+            if (startIndex == isotopes.Length - 1)
+            {
+                if (totalAmount % isotopes[startIndex] == 0)
+                {
+                    counts[startIndex] = totalAmount / isotopes[startIndex];
+                    isotopeCombinations(isotopes, counts, startIndex + 1, 0, outputResults);
+                }
+            }
+            else
+            {
+                for (int i = 0; i <= totalAmount / isotopes[startIndex]; i++)
+                {
+                    counts[startIndex] = i;
+                    isotopeCombinations(isotopes, counts, startIndex + 1, totalAmount - isotopes[startIndex] * i,outputResults);
+                }
+            }
+        }
+
+        public double calculateIsotopeDividend(List<Dictionary<int,int>> partOfFraction, int[] isotopeNumbers)
+        {
+            var isotopeWithAbundances = isotopeService.getAllAbundancesByisotopeNumber(isotopeNumbers);
+            double total = 0.0;
+            foreach (Dictionary<int, int> calcItem in partOfFraction)
+            {
+                double acc = 1;
+                foreach (KeyValuePair<int, int> element in calcItem)
+                {
+                    acc *= Math.Pow(isotopeWithAbundances[element.Key] / 100, element.Value);
+                }
+                total += acc;
+                acc = 1;
+            }
+
+            return total;
         }
     }
 }
