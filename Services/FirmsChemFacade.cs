@@ -74,14 +74,14 @@ namespace FirmsChemVS.Services
         public void abundanceForRow(DataGridView grid)
         {
             ArrayList Abundances = DataGridViewHelper.ColumnToList(grid, "abundances");
-            long totalAbundance = 0;
+            double totalAbundance = 0;
             foreach(String abundance in Abundances){
-               totalAbundance += Convert.ToInt64(abundance);
+               totalAbundance += Convert.ToDouble(abundance);
             }
             foreach (DataGridViewRow row in grid.Rows)
             {
                 if(row.Cells["abundances"].Value != null){
-                    row.Cells["alphas"].Value = calculations.calculateAlphaForRow(totalAbundance, Convert.ToInt64(row.Cells["abundances"].Value));
+                    row.Cells["alphas"].Value = calculations.calculateAlphaForRow(totalAbundance, Convert.ToDouble(row.Cells["abundances"].Value));
                 }
             }
         }

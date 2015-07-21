@@ -135,7 +135,7 @@ namespace FirmsChemVS
                 DataGridViewRow row = baseMassCalcTable.Rows[n];
                 {
 
-                    this.chart1.Series[0].Points.AddXY("m/z" + (n + 1), Convert.ToInt64(baseMassCalcTable.Rows[n].Cells[3].Value));
+                    this.chart1.Series[0].Points.AddXY("m/z" + (n + 1), Convert.ToDouble(baseMassCalcTable.Rows[n].Cells[3].Value));
 
                 }
             }
@@ -365,7 +365,7 @@ namespace FirmsChemVS
                 DataGridViewRow row = baseMassCalcTable.Rows[n];
                 {
 
-                    this.chart1.Series[0].Points.AddXY("m/z" + (n + 1), Convert.ToInt64(baseMassCalcTable.Rows[n].Cells[3].Value));
+                    this.chart1.Series[0].Points.AddXY("m/z" + (n + 1), Convert.ToDouble(baseMassCalcTable.Rows[n].Cells[3].Value));
 
                 }
             }
@@ -379,7 +379,7 @@ namespace FirmsChemVS
                 int n = 0;
                 for (long i = 0; i < baseMassCalcTable.Rows.Count; ++i)
                 {
-                    sumadd += Convert.ToInt64(baseMassCalcTable.Rows[n].Cells[3].Value);
+                    sumadd += Convert.ToDouble(baseMassCalcTable.Rows[n].Cells[3].Value);
                 }
 
             }
@@ -422,17 +422,17 @@ namespace FirmsChemVS
             }
         }
 
-        private Dictionary<int, Int64> sumUpAbundances()
+        private Dictionary<int, double> sumUpAbundances()
         {
-            var result = new Dictionary<int, long>();
+            var result = new Dictionary<int, double>();
             int lastIndex = 0;
-           List<long> abundances = DataGridViewHelper.ColumnToList(dataGridView2, "Abundance").ToArray().Select(s => Convert.ToInt64(s)).ToList();
+           List<double> abundances = DataGridViewHelper.ColumnToList(dataGridView2, "Abundance").ToArray().Select(s => Convert.ToDouble(s)).ToList();
            List<int> baseParentIon = DataGridViewHelper.ColumnToList(dataGridView2, "Baseparentionmass").ToArray().Select(s => Convert.ToInt32(s)).ToList();
       
 
            foreach (int ion in baseParentIon)
            {
-               List<long> subsetOfAbundance = abundances.GetRange(lastIndex, baseTableService.TableCount);
+               List<double> subsetOfAbundance = abundances.GetRange(lastIndex, baseTableService.TableCount);
                result.Add(ion, subsetOfAbundance.Sum());
                 lastIndex += baseTableService.TableCount;
             }
@@ -508,7 +508,7 @@ namespace FirmsChemVS
                     List<Dictionary<int, int>> numerator = new List<Dictionary<int, int>>();
                     List<Dictionary<int, int>> denominator = new List<Dictionary<int, int>>();
                     calculationSevice.CurrentRowElements = rowElements;
-                    calculationSevice.isotopeCombinations(isotopeList, counts.ToArray(), 0, daughterIon, numerator);
+                    calculationSevice.isotopeCombinations(isotopeList.OrderByDescending(i =>i).ToArray(), counts.ToArray(), 0, daughterIon, numerator);
                     calculationSevice.CurrentRowElements = DataGridViewHelper.elementDataGridToDictionary(elementGrid);
                     calculationSevice.isotopeCombinations(allIsotopes, Enumerable.Repeat(0, allIsotopes.Length).ToArray(), 0, parentIonTotal, denominator);
                     calculationSevice.CurrentRowElements = null;

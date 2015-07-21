@@ -190,35 +190,39 @@ namespace FirmsChemVS.Services
             return isotopicMass;
         }
 
-        public double calculateAlphaForRow(long totalAbundances, long abundance)
+        public double calculateAlphaForRow(double totalAbundances, double abundance)
         {
-            return Math.Round(((double)abundance / (double)totalAbundances),5);
+            return Math.Round((abundance / totalAbundances),5);
         }
 
         public void isotopeCombinations(int[] isotopes, int[] counts, int startIndex, int totalAmount,  List<Dictionary<int,int>> outputResults)
         {
-            Dictionary<string, int> totalAllowableIsotopes = new Dictionary<string, int>();
+            Dictionary<string, int> totalAllowableIsotopes = new Dictionary<string, int>(); //keeps a total of the number of symbols that can be present for a given isotope comb.
             if (startIndex >= isotopes.Length)
             {
-                string[] isotopeChars = isotopeService.getAllIsotopesInList(isotopes);
+                //Check to see the total allowable in our current evaluated combination
+                string[] isotopeChars = isotopeService.getAllIsotopesInList(isotopes);  //Gets the isotope symbols by the isotope numbers
+                
+                //loops through each isotope symbol
                 for (int index = 0; index < isotopeChars.Length; index++)
                 {
                     int retrievedValue;
                     
-                    if (totalAllowableIsotopes.TryGetValue(isotopeChars[index], out retrievedValue))
+                    if (totalAllowableIsotopes.TryGetValue(isotopeChars[index], out retrievedValue)) //if the key doesn't exist then return true and populate retrieved value with 0
                     {
-                        totalAllowableIsotopes[isotopeChars[index]] = retrievedValue + counts[index];
+                        totalAllowableIsotopes[isotopeChars[index]] = retrievedValue + counts[index]; //adds 0 + the combinations total for a specific symbol
                     }
                     else
                     {
+
                         totalAllowableIsotopes.Add(isotopeChars[index], counts[index]);
                     }
                 }
 
                 var dict3 = CurrentRowElements.Where(entry => totalAllowableIsotopes[entry.Key] != entry.Value)
-                 .ToDictionary(entry => entry.Key, entry => entry.Value) as Dictionary<string, int>;
+                 .ToDictionary(entry => entry.Key, entry => entry.Value) as Dictionary<string, int>; //compare the current isotope with the allowable isotope we got from the combination
 
-                if (dict3.Count == 0)
+                if (dict3.Count == 0) //if it is not equal to 0 it is not a valid combination.
                 {
                     Dictionary<int, int> results = new Dictionary<int, int>();
                     for (int index = 0; index < isotopes.Length; index++)
