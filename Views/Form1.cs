@@ -479,7 +479,7 @@ namespace FirmsChemVS
                         if ((bool)(row.Cells[index] as DataGridViewCheckBoxCell).Value == true)
                         {
                             int retrievedValue;
-                            string headerElement = dataGridView2.Columns[index].HeaderText.Substring(0, (dataGridView2.Columns[index].HeaderText.Length - 1));
+                            string headerElement = new String(dataGridView2.Columns[index].HeaderText.Where(Char.IsLetter).ToArray()); //dataGridView2.Columns[index].HeaderText.Substring(0, (dataGridView2.Columns[index].HeaderText.Length - 1));
                             if (rowElements.TryGetValue(headerElement, out retrievedValue))
                             {
                                 rowElements[headerElement] = retrievedValue + 1;
